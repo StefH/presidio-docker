@@ -1,4 +1,4 @@
-name: Make custom Presidio Docker
+name: Build custom Presidio Docker Image
 
 on:
   workflow_dispatch:
@@ -16,11 +16,11 @@ jobs:
         git clone https://github.com/microsoft/presidio.git
         echo "Presidio repository cloned successfully"
         
-    - name: Copy YAML files from custom folder to presidio
+    - name: Copy YAML files from custom folder to presidio-analyzer
       run: |
-        echo "Copying YAML files from custom folder to presidio..."
-        find custom -name "*.yaml" -exec cp {} presidio/ \;
-        echo "YAML files copied successfully"
+        echo "Copying YAML files from custom folder to presidio-analyzer..."
+        find custom -name "*.yaml" -exec cp {} presidio-analyzer/presidio-analyzer/conf \;
+        echo "YAML config files copied successfully"
         
     - name: Build Docker image
       run: |
