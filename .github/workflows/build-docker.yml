@@ -19,7 +19,7 @@ jobs:
     - name: Copy YAML files from custom folder to presidio-analyzer
       run: |
         echo "Copying YAML files from custom folder to presidio-analyzer..."
-        find custom -name "*.yaml" -exec cp {} presidio-analyzer/presidio-analyzer/conf \;
+        find custom -name "*.yaml" -exec cp {} ./presidio/presidio-analyzer/presidio-analyzer/conf \;
         echo "YAML config files copied successfully"
         
     - name: Build Docker image
