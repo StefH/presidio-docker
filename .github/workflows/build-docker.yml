@@ -1,0 +1,28 @@
+name: Make custom Presidio Docker
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-presidio:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Clone Presidio repository
+      run: |
+        git clone https://github.com/microsoft/presidio.git
+        echo "Presidio repository cloned successfully"
+        
+    - name: Copy YAML files from custom folder to presidio
+      run: |
+        echo "Copying YAML files from custom folder to presidio..."
+        find custom -name "*.yaml" -exec cp {} presidio/ \;
+        echo "YAML files copied successfully"
+        
+    - name: Build Docker image
+      run: |
+        docker build ./presidio/presidio-anonymizer -t sheyenrath/presidio-anonymizer
+        echo "Docker image built successfully"
