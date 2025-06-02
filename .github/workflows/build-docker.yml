@@ -15,18 +15,26 @@ jobs:
       run: |
         git clone https://github.com/microsoft/presidio.git
         
+    - name: Get latest Presidio version
+      id: get_version
+      run: |
+        cd presidio
+        LATEST_TAG=$(git describe --tags --abbrev=0)
+        echo "PRESIDIO_VERSION=${LATEST_TAG}" >> $GITHUB_ENV
+        
     - name: Copy YAML files from custom folder to presidio-analyzer
       run: |
-        echo "Copying YAML files from custom folder to presidio-analyzer..."
         cp -f ./custom/presidio-analyzer/*.yaml ./presidio/presidio-analyzer/presidio_analyzer/conf/
 
     - name: Build analyzer Docker image
       run: |
-        docker build ./presidio/presidio-analyzer -t sheyenrath/presidio-analyzer:latest        
+        docker build ./presidio/presidio-analyzer -t sheyenrath/presidio-analyzer:latest
+        docker tag sheyenrath/presidio-analyzer:latest sheyenrath/presidio-analyzer:${PRESIDIO_VERSION}
         
     - name: Build anonymizer Docker image
       run: |
         docker build ./presidio/presidio-anonymizer -t sheyenrath/presidio-anonymizer:latest
+        docker tag sheyenrath/presidio-anonymizer:latest sheyenrath/presidio-anonymizer:${PRESIDIO_VERSION}
         
     - name: Login to Docker Hub
       uses: docker/login-action@v3
@@ -36,8 +44,10 @@ jobs:
 
     - name: Push Docker analyzer image to Docker Hub
       run: |
-        docker push sheyenrath/presidio-analyzer:latest        
+        docker push sheyenrath/presidio-analyzer:latest
+        docker push sheyenrath/presidio-analyzer:${PRESIDIO_VERSION}
         
     - name: Push Docker anonymizer image to Docker Hub
       run: |
         docker push sheyenrath/presidio-anonymizer:latest
+        docker push sheyenrath/presidio-anonymizer:${PRESIDIO_VERSION}
