@@ -21,6 +21,7 @@ jobs:
         cd presidio
         LATEST_TAG=$(git describe --tags --abbrev=0)
         echo "PRESIDIO_VERSION=${LATEST_TAG}" >> $GITHUB_ENV
+        echo "Using Presidio version: ${LATEST_TAG}"
         
     - name: Copy YAML files from custom folder to presidio-analyzer
       run: |
